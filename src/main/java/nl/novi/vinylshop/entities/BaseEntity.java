@@ -1,3 +1,5 @@
+package nl.novi.vinylshop.entities;
+
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
