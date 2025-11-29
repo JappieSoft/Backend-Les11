@@ -17,6 +17,9 @@ public abstract class BaseEntity {
     @Column(name = "edited_date")
     private LocalDateTime editDate;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @PrePersist
     protected void onCreate() {
         createDate = LocalDateTime.now();
@@ -52,5 +55,9 @@ public abstract class BaseEntity {
     public void setEditDate(LocalDateTime editDate) {
         this.editDate = editDate;
     }
+
+    public String getName() {return name;}
+
+    public void setName(String name) {this.name = name;}
 }
 

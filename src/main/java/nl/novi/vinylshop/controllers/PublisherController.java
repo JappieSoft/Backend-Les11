@@ -2,7 +2,6 @@ package nl.novi.vinylshop.controllers;
 
 import nl.novi.vinylshop.entities.GenreEntity;
 import nl.novi.vinylshop.helpers.UrlHelper;
-
 import nl.novi.vinylshop.services.GenreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,16 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//GET /genres - Haalt een lijst van alle genres op.
-//GET /genres/{id} - Haalt een specifiek genre op basis van ID op.
-//POST /genres - Creëert een nieuw genre.
-//PUT /genres/{id} - Werkt een bestaand genre bij.
-//DELETE /genres/{id} - Verwijdert een genre.
-
 
 @RestController
-@RequestMapping("/genres")
-public class GenreController {
+@RequestMapping("/publishers")
+public class PublisherController {
 
     private final GenreService genreService;
     private final UrlHelper urlHelper;
@@ -60,5 +53,3 @@ public class GenreController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-
-
