@@ -1,8 +1,8 @@
 package nl.novi.vinylshop.controllers;
 
-import nl.novi.vinylshop.entities.GenreEntity;
+import nl.novi.vinylshop.entities.PublisherEntity;
 import nl.novi.vinylshop.helpers.UrlHelper;
-import nl.novi.vinylshop.services.GenreService;
+import nl.novi.vinylshop.services.PublisherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,42 +14,41 @@ import java.util.List;
 @RequestMapping("/publishers")
 public class PublisherController {
 
-    private final GenreService genreService;
+    private final PublisherService publisherService;
     private final UrlHelper urlHelper;
 
-    public GenreController(GenreService genreService, UrlHelper urlHelper) {
-        this.genreService = genreService;
+    public PublisherController(PublisherService publisherService, UrlHelper urlHelper) {
+        this.publisherService = publisherService;
         this.urlHelper = urlHelper;
-
     }
 
     @GetMapping
-    public ResponseEntity<List<GenreEntity>> getAllGenres() {
-        var genres = genreService.findAllGenres();
-        return ResponseEntity.ok(genres);
+    public ResponseEntity<List<PublisherEntity>> getAllPublishers() {
+        var publishers = publisherService.findAllPublishers();
+        return ResponseEntity.ok(publishers);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GenreEntity> getGenreById(@PathVariable Long id) {
-        var genre = genreService.findGenreById(id);
-        return new ResponseEntity<>(genre, HttpStatus.OK);
+    public ResponseEntity<PublisherEntity> getPublisherById(@PathVariable Long id) {
+        var publisher = publisherService.findPublisherById(id);
+        return new ResponseEntity<>(publisher, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<GenreEntity> createGenre(@RequestBody GenreEntity genreInput) {
-        var newGenre = genreService.createGenre(genreInput);
-        return ResponseEntity.created(urlHelper.getCurrentUrlWithId(newGenre.getId())).body(newGenre);
+    public ResponseEntity<PublisherEntity> createPublisher(@RequestBody PublisherEntity publisherInput) {
+        var newPublisher = publisherService.createPublisher(publisherInput);
+        return ResponseEntity.created(urlHelper.getCurrentUrlWithId(newPublisher.getId())).body(newPublisher);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GenreEntity> updateGenre(@PathVariable Long id, @RequestBody GenreEntity genreInput) {
-        var updatedGenre = genreService.updateGenre(id, genreInput);
-        return new ResponseEntity<>(updatedGenre, HttpStatus.OK);
+    public ResponseEntity<PublisherEntity> updatePublisher(@PathVariable Long id, @RequestBody PublisherEntity publisherInput) {
+        var updatedPublisher = publisherService.updatePublisher(id, publisherInput);
+        return new ResponseEntity<>(updatedPublisher, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGenre(@PathVariable Long id) {
-        genreService.deleteGenre(id);
+    public ResponseEntity<Void> deletePublisher(@PathVariable Long id) {
+        publisherService.deletePublisher(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
