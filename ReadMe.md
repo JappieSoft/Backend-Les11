@@ -1,19 +1,15 @@
 # Inleiding
-Je hebt in de vorige opdracht een `GenreController` met CRUD operaties voor een tijdelijke `Genre` entiteit. De GenreController maakte gebruik van een tijdelijke `GenreService` om Genres op te slaan in een mock-database.
+Je hebt in de vorige opdracht voor `GenreEntity` een Controller, Service en Repository gemaakt.
+Je hebt hetzelfde gedaan voor de `PublisherEntity`.
 
-In deze opdracht ga je een echte `GenreService` maken die samenwerkt met een echte `GenreRepository` en gebruik maakt van een echte database. Je gaat ook een echte `GenreEntiteit` maken die je in die database gaat opslaan en bewerken.
-
-Heb je de opdracht van vorige week niet gemaakt of niet af gekregen, dan kun je de [voorbeeld uitwerkingen](https://github.com/hogeschoolnovi/backend-springboot-vinylshop-controller-uitwerkingen) clonen.
+Heb je de opdracht van vorige week niet gemaakt of niet af gekregen, dan kun je de [voorbeeld uitwerkingen](https://github.com/hogeschoolnovi/backend-springboot-vinylshop-repository-uitwerkingen) clonen.
 
 # Opdrachtbeschrijving
 
 Je gaat in deze opdracht verder werken aan de opdracht die je vorige week gemaakt hebt. 
 
-Je gaat de `GenreController` uitbreiden met een werkende `GenreService` en `GenreRepository`. Daarnaast ga je ook een `PublisherController` met een `PublisherService` en een `PublisherRepository` maken. 
-
-Naast deze architecturale klassen heb je uiteraard ook entiteiten nodig Dat zijn de `GenreEntity` en de `PublisherEntity`, beide gebaseerd op de `BaseEntity`.
-
-De repository is de klasse die communiceert met de database, maar dan moet er wel een database geconfigureerd zijn. Dat ga je doen in de `application.properties`. Daarvoor heb je ook een extra dependency nodig in de `pom.xml`.
+Je gaat de entities uitbreiden met DTO's en mappers. 
+Uiteraard ga je er ook zorgen dat jouw controllers en services met die DTO's kunnen werken.
         
 
 # Randvoorwaarden
@@ -21,9 +17,10 @@ De repository is de klasse die communiceert met de database, maar dan moet er we
 - Zorg dat je mappenstructuur aan de Maven voorwaarden voldoet
 - Je mappen structuur heeft ten minste de packages: 
   - controllers
-  - entities
   - repositories
   - services
+  - dtos
+  - entities
 - Je hebt twee controllers:
   - GenreController
   - PublisherController
@@ -37,120 +34,139 @@ De repository is de klasse die communiceert met de database, maar dan moet er we
   - GenreEntity
   - PublisherEntity
   - BaseEntity
+- Je hebt vier DTO's
+  - GenreRequestDTO
+  - GenreResponseDTO
+  - PublisherRequestDTO
+  - PublisherResponseDTO
+- Je hebt twee mappers
+  - GenreMapper
+  - PublisherMapper
 - Je hebt de juiste instellingen in je application.properties om de database connectie goed tot stand te brengen.
-- Je hebt de juiste dependencies aan het project gekoppeld.
+- Je hebt de juiste dependencies aan het project gekoppeld (ook voor validatie).
 - Je hebt minimaal één record van beide entiteiten in je data.sql staan.
 - Je hebt een export van Postman met up-to-date requests voor beide entiteiten
 
 
 # Stappenplan
 
-## Stap 1 (packages)
+## Stap 0 (packages)
 
-Je hebt vorige week al de juiste maven structuur geïmplementeerd. Zorg dat je naast de `controller`, `service` en `entities` packages, ook een `repositories` package hebt.
+Maak de juiste packages aan. De structuur van de nieuwe packages ziet er als volgt uit:
 
-## Stap 2 (dependencies)
-Je hebt de volgende dependencies nodig: 
-- **spring-boot-starter-data-jpa**: Deze heb je nodig om repositories en entities te kunnen maken met JPA.
-- **postgresql**: Deze heb je nodig om verbinding te kunnen leggen met de database.
+- dtos
+  - genre
+  - publisher
+- mappers
 
-Je kunt de exacte notatie voor deze dependencies vinden op https://mvnrepository.com
+## Stap 1 (Response DTO's)
 
-## Stap 3 (application.properties)
+Maak een `dto` map met daarin een een `genre` en een `publisher` map.
 
-Zet de juiste instellingen in de application.properties. Kijk in EdHub om te zien welk je ook alweer nodig hebt. 
-
-Denk er aan dat je wachtwoord publiek op github komt te staan, dus kies een wachtwoord als "password" en niet het wachtwoord dat je ook voor je Instagram gebruikt.
-
-
-## Stap 4 (entities)
-Je gaat twee entities aanmaken die er als volgt uitzien: 
-
-**GenreEntity**
+Maak een `GenreResponseDto` met de volgende velden:
 - id
-- createDate
-- editDate
-- name
+- name 
 - description
 
-**PublisherEntity**
+
+Maak een `PublisherResponseDto` met de volgende velden:
 - id
-- createDate
-- editDate
 - name
 - address
 - contactDetails
 
-Je zult misschien al opgemerkt hebben dat de id, createDate en editDate in beide klassen voorkomen. In de java cursus heb je geleerd dat de juiste OOP oplossing dan is om overerving toe te passen. Dat is in SpringBoot in dit geval ook zo. _(Je ziet dat `name` toevallig ook in deze beide entiteiten staat, maar de entiteiten die je er volgende les nog bij gaat maken, hebben dat niet.)_
+## Stap 2 (Request DTO's)
 
-De base klasse gaan we de `BaseEntity` noemen. Deze bevat alle minimale attributen die een entiteit moet hebben (dus niet de `name`).
+Maak een `GenreRequestDto` met de volgende validatie regels: 
+- De naam mag niet leeg zijn
+- De naam mag niet langer dan 100 karakters zijn en niet korter dan 2
+- De description mag niet langer dan 255 karakters zijn.
 
-### BaseEntity
+Maak een `PublisherRequestDto` met de volgende validatie regels:
+- De naam mag niet leeg zijn
+- De naam mag niet langer dan 50 karakters zijn.
 
-**BaseEntity**
-- id (elke entiteit moet een Primary Key hebben)
-- createDAte (deze is administratief heel handig voor alle entiteiten)
-- editDate (deze is administratief heel handig voor alle entiteiten)
+Zorg er bij beide DTO's voor dat er ook een goede message gemaakt wordt.
 
-De exacte code voor de `BaseEntity` kun je vinden in de src-map van deze repository. 
+## Stap 3 (POM)
 
-Deze klasse begint niet met een `@Entity` annotatie, maar met een `@MappedSuperclass`. Met deze annotatie implementeer je de simpelste vorm van overerving. De `BaseEntity` klasse krijgt geen eigen database tabel en kan geen relaties aangaan. De attributen van de `BaseEntity` klasse worden in de tabel van de sub-klasse gezet. In de code werkt de overerving verder zoals je gewend bent.
+Voeg de validatie dependency toe aan je pom.xml.
 
-Daarnaast die je ook de `@PrePersist` en `@PreUpdate` annotaties. Deze zorgen er voor dat de entiteit voor de eerste persist (save) of voor elke opvolgende persist iets doet. In dit slaat het de huidige tijd en datum op.
-
-Behalve deze "simpele" vorm van overerving, zijn er ook nog [andere manieren](https://www.baeldung.com/hibernate-inheritance). Maar denk er aan, aggregatie over compositie en compositie over overerving.
-
-### GenreEntity en PublisherEntity
-
-De andere twee entiteiten mag je zelf implementeren. 
-- Zorg dat ze de `@Entity` annotatie bevatten
-- Gebruik de `@Table` annotatie om de juiste tabel-naam in te stellen
-- Zorg dat ze beide van `BaseEntity` overerven.
-- Doe je dat niet, zorg dan dat tenminste de `Primary Key` een automatisch gegenereerd `Long` is.
-- Implementeer de andere attributen met getters en setters
-- Zorg dat de `name` attribuut in beide entiteiten verplicht is.
-
-## Stap 5 (repositories)
-
-Definieer de `GenreRepository` en de `PublisherRepository` in de `repositories` package. Zorg dat ze overerven van de `JpaRepository`. Deze repositories hebben geen bijzondere functionaliteiten nodig.
+## Stap 4 (Mappers)
 
 
-## Stap 6 (service interface) 
-Je hebt vorige week een `GenreService` gebruikt die niet helemaal werkt zoals het zou moeten. 
-De publieke methodes in die "mock"-service hadden echter wel de goede basis opzet. 
+De mapper pakken we op een slimme manier aan door een algemene interface voor de mappers te maken.
 
-Maak een nieuwe `GenreService` die wel alle publieke methodes van de mock-GenreService bevat:
-- List<GenreEntity> findAllGenres(); 
-- GenreEntity findGenreById(Long id); 
-- GenreEntity createGenre(GenreEntity input); 
-- GenreEntity updateGenre(Long id, GenreEntity input); 
-- void deleteGenre(Long id);
+De interface mag je als volgt definieren:
 
-Doe hetzelfde voor de `PublisherService`.
+``` java
+public interface DTOMapper<RESPONSE, REQUEST , T extends BaseEntity> {
+    RESPONSE mapToDto(T model);
 
-Nog wat algemene opmerkingen:
+    List<RESPONSE> mapToDto(List<T> models);
 
-- Injecteer de repository via "constructor injection"
-- Gebruik de repository methodes om de benodigde data uit de database te halen of in de database te zetten.
-- Denk aan een goede afhandeling van de `Optional` datatypes in de service. Als de record niet gevonden is, mag je voor nu `null` returnen. Je kunt dit op verschillende manieren uitwerken, zoals uitgelegd in EdHub. In de voorbeeld uitwerkingen kun je straks ook verschillende manieren vinden.
-- Denk er aan dat je niet het `ID` overschrijft in de update methode, anders pas je misschien de verkeerde aan of maak je een nieuwe record.
-- _**PROTIP**: het is handig om een private `getGenreById` methode te maken, die de record uit de database haalt en checkt. Deze actie moet je namelijk voor meerdere functies uitvoeren._
+    T mapToEntity(REQUEST genreModel);
+}
+```
 
-Voor de `PublisherService` mag je hetzelfde doen.
+Maak nu de `GenreDTOMapper` waarin je de volgende methodes vanuit de interface overschrijft:
+- public GenreResponseDTO mapToDto(GenreEntity model)
+- public List<GenreResponseDTO> mapToDto(List<GenreEntity> models)
+- public GenreEntity mapToEntity(GenreRequestDTO genreModel)
 
-## Stap 7 (controller)
-Implementeer de `PublisherController`.  
-Weet je niet meer hoe dat moet, kijk dan nog eens bij de instructies van vorige week.
+Maak ook de `PublisherDTOMapper` waarin je de volgende methodes vanuit de interface overschrijft:
+- public PublisherResponseDTO mapToDto(PublisherEntity publisher)
+- public List<PublisherResponseDTO> mapToDto(List<PublisherEntity> publishers)
+- public PublisherEntity mapToEntity(PublisherRequestDTO dto)
 
-## Stap 8 (data)
-Vul de database met testdata door een `data.sql` in je `resources` map te zetten. 
-Denk er ook aan dat je de juiste instellingen in je `application.properties` heb staan.
+> Merk op dat elke DTOMapper-klasse dus twee methodes heeft met de naam "mapToDto". Één met een model als input en een dto als output en één met een List<model> als input en een List<dto> als output. Dit noemen we "method overloading".
 
-Zorg dat je ten minste één Genre en één Publisher in je database hebt staan.
+Vergeet niet de juiste annotatie boven de Mapper klassen te zetten.
 
-_**PROTIP**: voor datums kun je in de data.sql de waarde `now()` gebruikern, een SQL functie_
+## Stap 5 (Service) 
 
-## Stap 9 (Postman)
+Injecteer de `GenreDTOMapper` in de `GenreService` en injecteer de `PublisherDTOMapper` in de `PublisherService`.
+
+Zorg dat alle methodes die nu een `GenreEntity` naar de controller returnen, aangepast worden zodat ze een `GenreResponseDTO` naar de controller returnen.
+
+Maak hierbij gebruik van de `GenreDTOMapper`.
+
+Hier is een voorbeeld van de aangepaste `createGenre` methode: 
+
+```java
+public GenreResponseDTO createGenre(GenreRequestDTO genreDTO) {
+    GenreEntity genreEntity = genreDTOMapper.mapToEntity(genreDTO);
+    genreEntity = genreRepository.save(genreEntity);
+    return genreDTOMapper.mapToDto(genreEntity);
+}
+
+```
+
+Pas de `PublisherService` op dezelfde manier aan.
+
+## Stap 6 (Controller)
+
+Zorg dat jouw controllers, en alle methodes (GET-, POST-, PUT- en DELETE-mappings) gebruik maken van de DTO's als input en als output.
+
+Als voorbeeld hier de aangepaste POST mapping van de GenreController: 
+```java
+    @PostMapping
+    public ResponseEntity<GenreResponseDTO> createGenre(@RequestBody @Valid GenreRequestDTO genreModel) {
+        GenreResponseDTO newGenre = genreService.createGenre(genreModel);
+        return ResponseEntity.created(urlHelper.getCurrentUrlWithId(newGenre.getId())).body(newGenre);
+    }
+```
+
+Vergeet niet om de `@Valid` annotatie te gebruiken, anders worden je validatie regels niet gevalideerd.
+
+
+
+## Stap 7 (Postman)
 Voeg een actuele export van je postman collectie toe aan de `resources` map.
 
+Waarschijnlijk kun je hier dezelfde postman export voor gebruiken als in de vorige opdracht, maar controleer het wel even. 
+
+Test vooral ook goed of je geen onverwachte `null` waardes terug krijgt, omdat je een mapper niet goed ingevuld hebt. 
+
+Test ook wat er gebeurt als je een PostMan request verstuurd die de validatieregels overtreedt.
 
