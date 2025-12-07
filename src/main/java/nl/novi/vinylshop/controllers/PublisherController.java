@@ -1,6 +1,7 @@
 package nl.novi.vinylshop.controllers;
 
-import nl.novi.vinylshop.entities.PublisherEntity;
+import nl.novi.vinylshop.dtos.request.PublisherRequestDTO;
+import nl.novi.vinylshop.dtos.response.PublisherResponseDTO;
 import nl.novi.vinylshop.helpers.UrlHelper;
 import nl.novi.vinylshop.services.PublisherService;
 import org.springframework.http.HttpStatus;
@@ -23,25 +24,25 @@ public class PublisherController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PublisherEntity>> getAllPublishers() {
+    public ResponseEntity<List<PublisherResponseDTO>> getAllPublishers() {
         var publishers = publisherService.findAllPublishers();
         return ResponseEntity.ok(publishers);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PublisherEntity> getPublisherById(@PathVariable Long id) {
+    public ResponseEntity<PublisherResponseDTO> getPublisherById(@PathVariable Long id) {
         var publisher = publisherService.findPublisherById(id);
-        return new ResponseEntity<>(publisher, HttpStatus.OK);
+        return new ResponseEntity<PublisherResponseDTO>(publisher, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<PublisherEntity> createPublisher(@RequestBody PublisherEntity publisherInput) {
+    public ResponseEntity<PublisherResponseDTO> createPublisher(@RequestBody PublisherRequestDTO publisherInput) {
         var newPublisher = publisherService.createPublisher(publisherInput);
         return ResponseEntity.created(urlHelper.getCurrentUrlWithId(newPublisher.getId())).body(newPublisher);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PublisherEntity> updatePublisher(@PathVariable Long id, @RequestBody PublisherEntity publisherInput) {
+    public ResponseEntity<PublisherResponseDTO> updatePublisher(@PathVariable Long id, @RequestBody PublisherRequestDTO publisherInput) {
         var updatedPublisher = publisherService.updatePublisher(id, publisherInput);
         return new ResponseEntity<>(updatedPublisher, HttpStatus.OK);
     }

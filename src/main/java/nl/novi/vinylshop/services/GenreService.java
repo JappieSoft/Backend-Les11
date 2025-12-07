@@ -66,6 +66,11 @@ public class GenreService {
         return genreMapper.mapToDto(genreEntity);
     }
 
+
+    /**
+     * Zoekt entity op basis van het id in db.
+     * Voor reusability.
+     */
     private GenreEntity getGenreEntity(Long id){
         Optional<GenreEntity> genreEntity = genreRepository.findById(id);
         if (genreEntity.isPresent()) {
