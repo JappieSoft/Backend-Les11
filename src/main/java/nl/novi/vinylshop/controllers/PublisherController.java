@@ -1,5 +1,6 @@
 package nl.novi.vinylshop.controllers;
 
+import jakarta.validation.Valid;
 import nl.novi.vinylshop.dtos.request.PublisherRequestDTO;
 import nl.novi.vinylshop.dtos.response.PublisherResponseDTO;
 import nl.novi.vinylshop.helpers.UrlHelper;
@@ -25,25 +26,25 @@ public class PublisherController {
 
     @GetMapping
     public ResponseEntity<List<PublisherResponseDTO>> getAllPublishers() {
-        var publishers = publisherService.findAllPublishers();
+        List<PublisherResponseDTO> publishers = publisherService.findAllPublishers();
         return ResponseEntity.ok(publishers);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PublisherResponseDTO> getPublisherById(@PathVariable Long id) {
-        var publisher = publisherService.findPublisherById(id);
+        PublisherResponseDTO publisher = publisherService.findPublisherById(id);
         return new ResponseEntity<PublisherResponseDTO>(publisher, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<PublisherResponseDTO> createPublisher(@RequestBody PublisherRequestDTO publisherInput) {
-        var newPublisher = publisherService.createPublisher(publisherInput);
+    public ResponseEntity<PublisherResponseDTO> createPublisher(@Valid @RequestBody PublisherRequestDTO publisherInput) {
+        PublisherResponseDTO newPublisher = publisherService.createPublisher(publisherInput);
         return ResponseEntity.created(urlHelper.getCurrentUrlWithId(newPublisher.getId())).body(newPublisher);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PublisherResponseDTO> updatePublisher(@PathVariable Long id, @RequestBody PublisherRequestDTO publisherInput) {
-        var updatedPublisher = publisherService.updatePublisher(id, publisherInput);
+    public ResponseEntity<PublisherResponseDTO> updatePublisher(@PathVariable Long id, @RequestBody @Valid PublisherRequestDTO publisherInput) {
+        PublisherResponseDTO updatedPublisher = publisherService.updatePublisher(id, publisherInput);
         return new ResponseEntity<>(updatedPublisher, HttpStatus.OK);
     }
 

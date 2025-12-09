@@ -1,17 +1,15 @@
 package nl.novi.vinylshop.dtos.request;
 
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class PublisherRequestDTO {
     @Id
     private Long id;
 
     @NotBlank
-    @Max(value = 100, message = "Naam mag niet langer zijn dat 100 letters.")
-    @Min(value = 3, message = "Naam moet minimaal 3 letters lang zijn.")
+    @Size(min = 3, max = 100, message = "Name must be between 2 and 50 characters")
     private String name;
     private String address;
     private String contactDetails;
