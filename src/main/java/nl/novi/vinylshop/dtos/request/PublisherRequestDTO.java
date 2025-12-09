@@ -9,7 +9,7 @@ public class PublisherRequestDTO {
     private Long id;
 
     @NotBlank
-    @Size(min = 3, max = 100, message = "Name must be between 2 and 50 characters")
+    @Size(min = 3, max = 100, message = "Name must be between 3 and 50 characters")
     private String name;
     private String address;
     private String contactDetails;

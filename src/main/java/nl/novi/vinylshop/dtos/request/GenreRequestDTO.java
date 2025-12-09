@@ -9,7 +9,7 @@ public class GenreRequestDTO {
     private Long id;
 
     @NotBlank
-    @Size(min = 3, max = 100, message = "Name must be between 2 and 50 characters")
+    @Size(min = 3, max = 100, message = "Name must be between 3 and 50 characters")
     private String name;
 
     @Size(max = 250, message = "Beschrijving mag niet langer zijn dan 250 letters.")
