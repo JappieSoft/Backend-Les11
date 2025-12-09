@@ -1,8 +1,9 @@
 package nl.novi.vinylshop.controllers;
 
-import nl.novi.vinylshop.entities.GenreEntity;
+import jakarta.validation.Valid;
+import nl.novi.vinylshop.dtos.request.GenreRequestDTO;
+import nl.novi.vinylshop.dtos.response.GenreResponseDTO;
 import nl.novi.vinylshop.helpers.UrlHelper;
-
 import nl.novi.vinylshop.services.GenreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,26 +32,26 @@ public class GenreController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GenreEntity>> getAllGenres() {
-        var genres = genreService.findAllGenres();
+    public ResponseEntity<List<GenreResponseDTO>> getAllGenres() {
+        List<GenreResponseDTO> genres = genreService.findAllGenres();
         return ResponseEntity.ok(genres);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GenreEntity> getGenreById(@PathVariable Long id) {
-        var genre = genreService.findGenreById(id);
-        return new ResponseEntity<>(genre, HttpStatus.OK);
+    public ResponseEntity<GenreResponseDTO> getGenreById(@PathVariable Long id) {
+        GenreResponseDTO genre = genreService.findGenreById(id);
+        return new ResponseEntity<GenreResponseDTO>(genre, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<GenreEntity> createGenre(@RequestBody GenreEntity genreInput) {
-        var newGenre = genreService.createGenre(genreInput);
+    public ResponseEntity<GenreResponseDTO> createGenre(@Valid @RequestBody GenreRequestDTO genreInput) {
+        GenreResponseDTO newGenre = genreService.createGenre(genreInput);
         return ResponseEntity.created(urlHelper.getCurrentUrlWithId(newGenre.getId())).body(newGenre);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GenreEntity> updateGenre(@PathVariable Long id, @RequestBody GenreEntity genreInput) {
-        var updatedGenre = genreService.updateGenre(id, genreInput);
+    public ResponseEntity<GenreResponseDTO> updateGenre(@PathVariable Long id, @Valid @RequestBody GenreRequestDTO genreInput) {
+        GenreResponseDTO updatedGenre = genreService.updateGenre(id, genreInput);
         return new ResponseEntity<>(updatedGenre, HttpStatus.OK);
     }
 

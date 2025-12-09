@@ -1,5 +1,8 @@
 package nl.novi.vinylshop.services;
 
+import nl.novi.vinylshop.dtos.mapper.GenreMapper;
+import nl.novi.vinylshop.dtos.request.GenreRequestDTO;
+import nl.novi.vinylshop.dtos.response.GenreResponseDTO;
 import nl.novi.vinylshop.entities.GenreEntity;
 import nl.novi.vinylshop.repository.GenreRepository;
 import org.springframework.stereotype.Service;
@@ -20,10 +23,11 @@ import java.util.Optional;
 @Service
 public class GenreService {
 
-
+    private final GenreMapper genreMapper;
     private final GenreRepository genreRepository;
 
-    public GenreService(GenreRepository genreRepository) {
+    public GenreService(GenreMapper genreMapper, GenreRepository genreRepository) {
+        this.genreMapper = genreMapper;
         this.genreRepository = genreRepository;
     }
 
@@ -32,8 +36,8 @@ public class GenreService {
      * Als de mock-database leeg is, wordt een lege lijst geretourneerd.
      * @return
      */
-    public List<GenreEntity> findAllGenres() {
-        return genreRepository.findAll();
+    public List<GenreResponseDTO> findAllGenres() {
+        return genreMapper.mapToDto(genreRepository.findAll());
     }
 
     /**
@@ -42,7 +46,32 @@ public class GenreService {
      * @param id
      * @return
      */
-    public GenreEntity findGenreById(Long id) {
+    public GenreResponseDTO findGenreById(Long id) {
+        Optional<GenreEntity> genreEntity = genreRepository.findById(id);
+        if (genreEntity.isPresent()) {
+            return genreMapper.mapToDto(genreEntity.get());
+        }
+        return null;
+    }
+
+    /**
+     * Slaat een nieuw Genre-record op in de mock-database en maakt daarbij een uniek ID aan voor het object.
+     * @param "genre" Het te creëren en op te slaan genre. Moet niet `null` zijn.
+     * @return Het opgeslagen Genre-object met het toegekende id.
+     */
+    public GenreResponseDTO createGenre(GenreRequestDTO genreRequestDTO) {
+        GenreEntity genreEntity = genreMapper.mapToEntity(genreRequestDTO);
+        genreEntity = genreRepository.save(genreEntity);
+
+        return genreMapper.mapToDto(genreEntity);
+    }
+
+
+    /**
+     * Zoekt entity op basis van het id in db.
+     * Voor reusability.
+     */
+    private GenreEntity getGenreEntity(Long id){
         Optional<GenreEntity> genreEntity = genreRepository.findById(id);
         if (genreEntity.isPresent()) {
             return genreEntity.get();
@@ -51,29 +80,19 @@ public class GenreService {
     }
 
     /**
-     * Slaat een nieuw Genre-record op in de mock-database en maakt daarbij een uniek ID aan voor het object.
-     * @param genre Het te creëren en op te slaan genre. Moet niet `null` zijn.
-     * @return Het opgeslagen Genre-object met het toegekende id.
-     */
-    public GenreEntity createGenre(GenreEntity genreEntity) {
-        genreRepository.save(genreEntity);
-        return genreEntity;
-    }
-
-    /**
      * Update een bestaande Genre-record uit de mock-database op basis van het id.
      * @param id
      * @param genreInput
      * @return
      */
-    public GenreEntity updateGenre(Long id, GenreEntity genreInput){
-        GenreEntity existingGenreEntity = findGenreById(id);
+    public GenreResponseDTO updateGenre(Long id, GenreRequestDTO genreInput){
+        GenreEntity existingGenreEntity = getGenreEntity(id);
 
         existingGenreEntity.setName(genreInput.getName());
         existingGenreEntity.setDescription(genreInput.getDescription());
         genreRepository.save(existingGenreEntity);
 
-        return existingGenreEntity;
+        return genreMapper.mapToDto(existingGenreEntity);
     }
 
     /**
@@ -82,7 +101,7 @@ public class GenreService {
      */
     public void deleteGenre(Long id) {
         try{
-        GenreEntity existingGenreEntity = findGenreById(id);
+        GenreEntity existingGenreEntity = getGenreEntity(id);
         genreRepository.delete(existingGenreEntity);
         } catch (IndexOutOfBoundsException ex) {
         }

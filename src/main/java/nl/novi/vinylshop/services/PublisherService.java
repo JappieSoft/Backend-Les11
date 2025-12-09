@@ -1,5 +1,8 @@
 package nl.novi.vinylshop.services;
 
+import nl.novi.vinylshop.dtos.mapper.PublisherMapper;
+import nl.novi.vinylshop.dtos.request.PublisherRequestDTO;
+import nl.novi.vinylshop.dtos.response.PublisherResponseDTO;
 import nl.novi.vinylshop.entities.PublisherEntity;
 import nl.novi.vinylshop.repository.PublisherRepository;
 import org.springframework.stereotype.Service;
@@ -10,31 +13,43 @@ import java.util.Optional;
 @Service
 public class PublisherService {
 
+    private final PublisherMapper publisherMapper;
     private final PublisherRepository publisherRepository;
 
-    public PublisherService(PublisherRepository publisherRepository) {
+    public PublisherService(PublisherMapper publisherMapper, PublisherRepository publisherRepository) {
+        this.publisherMapper = publisherMapper;
         this.publisherRepository = publisherRepository;
     }
 
-    public List<PublisherEntity> findAllPublishers() {
-        return publisherRepository.findAll();
+    public List<PublisherResponseDTO> findAllPublishers() {
+        return publisherMapper.mapToDto(publisherRepository.findAll());
     }
 
-    public PublisherEntity findPublisherById(Long id) {
+    public PublisherResponseDTO findPublisherById(Long id) {
         Optional<PublisherEntity> PublisherEntity = publisherRepository.findById(id);
         if (PublisherEntity.isPresent()) {
-            return PublisherEntity.get();
+            return publisherMapper.mapToDto(PublisherEntity.get());
         }
         return null;
     }
 
-    public PublisherEntity createPublisher(PublisherEntity PublisherEntity) {
-        publisherRepository.save(PublisherEntity);
-        return PublisherEntity;
+    public PublisherResponseDTO createPublisher(PublisherRequestDTO publisherRequestDTO) {
+        PublisherEntity publisherEntity = publisherMapper.mapToEntity(publisherRequestDTO);
+        publisherEntity = publisherRepository.save(publisherEntity);
+
+        return publisherMapper.mapToDto(publisherEntity);
     }
 
-    public PublisherEntity updatePublisher(Long id, PublisherEntity publisherInput){
-        PublisherEntity existingPublisherEntity = findPublisherById(id);
+    private PublisherEntity getPublisherEntity(Long id){
+        Optional<PublisherEntity> publisherEntity = publisherRepository.findById(id);
+        if (publisherEntity.isPresent()) {
+            return publisherEntity.get();
+        }
+        return null;
+    }
+
+    public PublisherResponseDTO updatePublisher(Long id, PublisherRequestDTO publisherInput){
+        PublisherEntity existingPublisherEntity = getPublisherEntity(id);
 
         existingPublisherEntity.setName(publisherInput.getName());
         existingPublisherEntity.setAddress(publisherInput.getAddress());
@@ -42,12 +57,12 @@ public class PublisherService {
 
         publisherRepository.save(existingPublisherEntity);
 
-        return existingPublisherEntity;
+        return publisherMapper.mapToDto(existingPublisherEntity);
     }
 
     public void deletePublisher(Long id) {
         try{
-            PublisherEntity existingPublisherEntity = findPublisherById(id);
+            PublisherEntity existingPublisherEntity = getPublisherEntity(id);
             publisherRepository.delete(existingPublisherEntity);
         } catch (IndexOutOfBoundsException ex) {
         }
