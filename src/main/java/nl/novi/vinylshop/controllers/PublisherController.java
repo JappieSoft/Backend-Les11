@@ -2,7 +2,6 @@ package nl.novi.vinylshop.controllers;
 
 import jakarta.validation.Valid;
 import nl.novi.vinylshop.dtos.request.PublisherRequestDTO;
-import nl.novi.vinylshop.dtos.response.GenreResponseDTO;
 import nl.novi.vinylshop.dtos.response.PublisherResponseDTO;
 import nl.novi.vinylshop.helpers.UrlHelper;
 import nl.novi.vinylshop.services.PublisherService;
