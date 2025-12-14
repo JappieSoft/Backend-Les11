@@ -1,11 +1,16 @@
 package nl.novi.vinylshop.dtos.request;
 
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 
 public class  StockRequestDTO {
     @Id
     private Long albumId;
     private String condition;
+    @NotNull
+    @Min(0)
     private Double price;
 
     public Long getId() { return albumId; }

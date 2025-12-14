@@ -1,11 +1,13 @@
 package nl.novi.vinylshop.dtos.request;
 
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 public class ArtistRequestDTO {
     @Id
     private Long id;
 
+    @NotBlank
     private String name;
     private String biography;
 
