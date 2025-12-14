@@ -13,6 +13,8 @@ public class PublisherMapper implements DtoMapper<PublisherResponseDTO, Publishe
 
     @Override
     public PublisherResponseDTO mapToDto(PublisherEntity model) {
+        if (model == null) return null;
+
         PublisherResponseDTO dto = new PublisherResponseDTO();
         dto.setId(model.getId());
         dto.setName(model.getName());
@@ -24,6 +26,8 @@ public class PublisherMapper implements DtoMapper<PublisherResponseDTO, Publishe
 
     @Override
     public List<PublisherResponseDTO> mapToDto(List<PublisherEntity> models) {
+        if (models == null) return null;
+
         List<PublisherResponseDTO> dtos = new ArrayList<>();
         for (PublisherEntity model : models) {
             dtos.add(mapToDto(model));
@@ -34,6 +38,8 @@ public class PublisherMapper implements DtoMapper<PublisherResponseDTO, Publishe
 
     @Override
     public PublisherEntity mapToEntity(PublisherRequestDTO publisherModel) {
+        if (publisherModel == null) return null;
+
         PublisherEntity entity = new PublisherEntity();
         entity.setName(publisherModel.getName());
         entity.setAddress(publisherModel.getAddress());

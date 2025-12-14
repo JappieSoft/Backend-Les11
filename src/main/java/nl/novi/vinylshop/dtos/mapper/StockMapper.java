@@ -13,6 +13,8 @@ public class StockMapper implements DtoMapper<StockResponseDTO, StockRequestDTO,
 
     @Override
     public StockResponseDTO mapToDto(StockEntity model) {
+        if (model == null) return null;
+
         StockResponseDTO dto = new StockResponseDTO();
         dto.setId(model.getId());
         dto.setCondition(model.getCondition());
@@ -23,6 +25,8 @@ public class StockMapper implements DtoMapper<StockResponseDTO, StockRequestDTO,
 
     @Override
     public List<StockResponseDTO> mapToDto(List<StockEntity> models) {
+        if (models == null) return null;
+
         List<StockResponseDTO> dtos = new ArrayList<>();
         for (StockEntity model : models) {
             dtos.add(mapToDto(model));
@@ -33,6 +37,7 @@ public class StockMapper implements DtoMapper<StockResponseDTO, StockRequestDTO,
 
     @Override
     public StockEntity mapToEntity(StockRequestDTO stockModel) {
+        if (stockModel == null) return null;
         StockEntity entity = new StockEntity();
         entity.setCondition(stockModel.getCondition());
         entity.setPrice(stockModel.getPrice());

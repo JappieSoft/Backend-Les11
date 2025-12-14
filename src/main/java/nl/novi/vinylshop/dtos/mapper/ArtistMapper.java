@@ -13,6 +13,8 @@ public class ArtistMapper implements DtoMapper<ArtistResponseDTO, ArtistRequestD
 
     @Override
     public ArtistResponseDTO mapToDto(ArtistEntity model) {
+        if (model == null) return null;
+
         ArtistResponseDTO dto = new ArtistResponseDTO();
         dto.setId(model.getId());
         dto.setName(model.getName());
@@ -23,6 +25,8 @@ public class ArtistMapper implements DtoMapper<ArtistResponseDTO, ArtistRequestD
 
     @Override
     public List<ArtistResponseDTO> mapToDto(List<ArtistEntity> models) {
+        if (models == null) return null;
+
         List<ArtistResponseDTO> dtos = new ArrayList<>();
         for (ArtistEntity model : models) {
             dtos.add(mapToDto(model));
@@ -33,6 +37,8 @@ public class ArtistMapper implements DtoMapper<ArtistResponseDTO, ArtistRequestD
 
     @Override
     public ArtistEntity mapToEntity(ArtistRequestDTO artistModel) {
+        if (artistModel == null) return null;
+
         ArtistEntity entity = new ArtistEntity();
         entity.setName(artistModel.getName());
         entity.setBiography(artistModel.getBiography());

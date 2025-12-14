@@ -36,4 +36,8 @@ public class ArtistEntity extends BaseEntity {
     public void setBiography(String biography) {
         this.biography = biography;
     }
+
+    public Set<AlbumEntity> getAlbums() { return albums; }
+    public void setAlbums(Set<AlbumEntity> albums) { this.albums = albums; }
+
 }

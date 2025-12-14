@@ -13,6 +13,8 @@ public class GenreMapper implements DtoMapper<GenreResponseDTO, GenreRequestDTO,
 
     @Override
     public GenreResponseDTO mapToDto(GenreEntity model) {
+        if (model == null) return null;
+
         GenreResponseDTO dto = new GenreResponseDTO();
         dto.setId(model.getId());
         dto.setName(model.getName());
@@ -23,6 +25,8 @@ public class GenreMapper implements DtoMapper<GenreResponseDTO, GenreRequestDTO,
 
     @Override
     public List<GenreResponseDTO> mapToDto(List<GenreEntity> models) {
+        if (models == null) return null;
+
         List<GenreResponseDTO> dtos = new ArrayList<>();
         for (GenreEntity model : models) {
             dtos.add(mapToDto(model));
@@ -32,6 +36,7 @@ public class GenreMapper implements DtoMapper<GenreResponseDTO, GenreRequestDTO,
 
     @Override
     public GenreEntity mapToEntity(GenreRequestDTO genreModel) {
+        if (genreModel == null) return null;
         GenreEntity entity = new GenreEntity();
         entity.setName(genreModel.getName());
         entity.setDescription(genreModel.getDescription());
