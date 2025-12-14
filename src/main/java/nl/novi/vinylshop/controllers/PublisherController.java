@@ -2,6 +2,7 @@ package nl.novi.vinylshop.controllers;
 
 import jakarta.validation.Valid;
 import nl.novi.vinylshop.dtos.request.PublisherRequestDTO;
+import nl.novi.vinylshop.dtos.response.GenreResponseDTO;
 import nl.novi.vinylshop.dtos.response.PublisherResponseDTO;
 import nl.novi.vinylshop.helpers.UrlHelper;
 import nl.novi.vinylshop.services.PublisherService;
@@ -33,6 +34,9 @@ public class PublisherController {
     @GetMapping("/{id}")
     public ResponseEntity<PublisherResponseDTO> getPublisherById(@PathVariable Long id) {
         PublisherResponseDTO publisher = publisherService.findPublisherById(id);
+        if (publisher == null) {
+            return ResponseEntity.notFound().build(); // check of genre bestaat anders hier dus 404 Not Found
+        }
         return new ResponseEntity<PublisherResponseDTO>(publisher, HttpStatus.OK);
     }
 
