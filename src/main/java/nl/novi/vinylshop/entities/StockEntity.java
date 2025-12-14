@@ -1,8 +1,6 @@
 package nl.novi.vinylshop.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "stock")
@@ -14,10 +12,13 @@ public class StockEntity extends BaseEntity {
     @Column(name = "price")
     private double price;
 
+    @ManyToOne
+    @JoinColumn(name = "album_id")
+    private AlbumEntity album;
+
     public String getCondition() {
         return condition;
     }
-
     public void setCondition(String condition) {
         this.condition = condition;
     }
@@ -25,7 +26,6 @@ public class StockEntity extends BaseEntity {
     public double getPrice() {
         return price;
     }
-
     public void setPrice(double price) {
         this.price = price;
     }

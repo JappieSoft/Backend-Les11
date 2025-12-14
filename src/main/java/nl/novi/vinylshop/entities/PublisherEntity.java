@@ -1,8 +1,9 @@
 package nl.novi.vinylshop.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "publishers")
@@ -17,14 +18,16 @@ public class PublisherEntity extends BaseEntity{
         @Column(name="contact_details")
         private String contactDetails;
 
-    public String getName() {return name;}
+        @OneToMany(mappedBy = "publisher")
+        private Set<AlbumEntity> albums = new HashSet<>();
 
+
+    public String getName() {return name;}
     public void setName(String name) {this.name = name;}
 
     public String getAddress() {
         return address;
     }
-
     public void setAddress(String address) {
         this.address = address;
     }
@@ -32,7 +35,6 @@ public class PublisherEntity extends BaseEntity{
     public String getContactDetails() {
         return contactDetails;
     }
-
     public void setContactDetails(String contactDetails) {
         this.contactDetails = contactDetails;
     }

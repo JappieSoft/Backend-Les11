@@ -25,17 +25,17 @@ public class StockController {
 
     @GetMapping
     public ResponseEntity<List<StockResponseDTO>> getAllStocks() {
-        List<StockResponseDTO> stocks = stockService.findAllStocks();
-        return ResponseEntity.ok(stocks);
+        List<StockResponseDTO> stockItems = stockService.findAllStocks();
+        return ResponseEntity.ok(stockItems);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<StockResponseDTO> getStockById(@PathVariable Long id) {
-        StockResponseDTO stock = stockService.findStockById(id);
-        if (stock == null) {
+        StockResponseDTO stockItems = stockService.findStockById(id);
+        if (stockItems == null) {
             return ResponseEntity.notFound().build(); // check of genre bestaat anders hier dus 404 Not Found
         }
-        return new ResponseEntity<StockResponseDTO>(stock, HttpStatus.OK);
+        return new ResponseEntity<StockResponseDTO>(stockItems, HttpStatus.OK);
     }
 
     @PostMapping
