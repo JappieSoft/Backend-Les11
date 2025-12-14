@@ -8,8 +8,15 @@ import jakarta.persistence.Table;
 @Table(name = "genres")
 public class GenreEntity extends BaseEntity{
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column(name = "description")
     private String description;
+
+    public String getName() {return name;}
+
+    public void setName(String name) {this.name = name;}
 
     public String getDescription() {
         return description;

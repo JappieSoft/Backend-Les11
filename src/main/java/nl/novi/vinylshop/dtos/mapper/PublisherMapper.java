@@ -11,7 +11,6 @@ import java.util.List;
 @Component
 public class PublisherMapper implements DtoMapper<PublisherResponseDTO, PublisherRequestDTO, PublisherEntity>{
 
-
     @Override
     public PublisherResponseDTO mapToDto(PublisherEntity model) {
         PublisherResponseDTO dto = new PublisherResponseDTO();

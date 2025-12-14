@@ -8,11 +8,18 @@ import jakarta.persistence.Table;
 @Table(name = "publishers")
 public class PublisherEntity extends BaseEntity{
 
+        @Column(name = "name", nullable = false)
+        private String name;
+
         @Column(name="address")
         private String address;
 
         @Column(name="contact_details")
         private String contactDetails;
+
+    public String getName() {return name;}
+
+    public void setName(String name) {this.name = name;}
 
     public String getAddress() {
         return address;
