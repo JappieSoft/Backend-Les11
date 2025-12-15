@@ -1,11 +1,14 @@
 package nl.novi.vinylshop.dtos.response;
 
+import java.util.List;
+
 public class AlbumResponseDTO {
     private Long id;
     private String title;
     private int releaseYear;
     private GenreResponseDTO genre;
     private PublisherResponseDTO publisher;
+    private List<ArtistResponseDTO> artists;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -21,4 +24,7 @@ public class AlbumResponseDTO {
 
     public PublisherResponseDTO getPublisher() {return publisher;}
     public void setPublisher(PublisherResponseDTO publisher) {this.publisher = publisher;}
+
+    public List<ArtistResponseDTO> getArtist() {return artists;}
+    public void setArtists(List<ArtistResponseDTO> artists) {this.artists = artists;}
 }

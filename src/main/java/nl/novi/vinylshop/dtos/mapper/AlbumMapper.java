@@ -21,7 +21,6 @@ public class AlbumMapper implements DtoMapper<AlbumResponseDTO, AlbumRequestDTO,
         this.artistMapper = artistMapper;
     }
 
-
     @Override
     public AlbumResponseDTO mapToDto(AlbumEntity model) {
         if (model == null) return null;
