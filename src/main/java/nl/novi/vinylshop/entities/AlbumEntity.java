@@ -22,7 +22,12 @@ public class AlbumEntity extends BaseEntity {
     @OneToMany(mappedBy = "album")
     private Set<StockEntity> stockItems = new HashSet<>();
 
-    @ManyToMany(mappedBy = "albums")
+    @ManyToMany
+    @JoinTable(
+            name = "albums_artists",
+            joinColumns = @JoinColumn(name = "artist_id"),
+            inverseJoinColumns = @JoinColumn(name = "album_id")
+    )
     private Set<ArtistEntity> artists = new HashSet<>();
 
     @ManyToOne

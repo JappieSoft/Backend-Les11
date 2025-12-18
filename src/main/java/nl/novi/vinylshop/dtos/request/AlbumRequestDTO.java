@@ -1,19 +1,17 @@
 package nl.novi.vinylshop.dtos.request;
 
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public class AlbumRequestDTO {
     @Id
     private Long id;
 
     @NotBlank
-    @Size(min = 3, max = 100, message = "Title must be between 3 and 50 characters")
+    @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
     private String title;
 
+    @NotNull
     @Min(1877)
     @Max(2100)
     private int releaseYear;

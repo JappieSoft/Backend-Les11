@@ -32,6 +32,7 @@ public class AlbumMapper implements DtoMapper<AlbumResponseDTO, AlbumRequestDTO,
         dto.setGenre(genreMapper.mapToDto(model.getGenre()));
         dto.setPublisher(publisherMapper.mapToDto(model.getPublisher()));
         dto.setArtists(artistMapper.mapToDto(new ArrayList<>(model.getArtists())));
+
         return dto;
     }
 

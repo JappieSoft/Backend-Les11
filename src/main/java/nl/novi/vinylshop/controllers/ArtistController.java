@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import nl.novi.vinylshop.dtos.request.ArtistRequestDTO;
 import nl.novi.vinylshop.dtos.response.ArtistResponseDTO;
 import nl.novi.vinylshop.helpers.UrlHelper;
+import nl.novi.vinylshop.services.AlbumService;
 import nl.novi.vinylshop.services.ArtistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,12 @@ import java.util.List;
 @RequestMapping("/artists")
 public class ArtistController {
 
+    private final AlbumService albumService;
     private final ArtistService artistService;
     private final UrlHelper urlHelper;
 
-    public ArtistController(ArtistService artistService, UrlHelper urlHelper) {
+    public ArtistController(AlbumService albumService, ArtistService artistService, UrlHelper urlHelper) {
+        this.albumService = albumService;
         this.artistService = artistService;
         this.urlHelper = urlHelper;
     }
@@ -55,4 +58,16 @@ public class ArtistController {
         artistService.deleteArtist(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PostMapping("/{albumId}/artists/{artistId}")
+    public ResponseEntity<Void> linkArtist(@PathVariable Long albumId, @PathVariable Long artistId) {
+        albumService.linkArtist(albumId, artistId);
+        return ResponseEntity.ok().build();
+    }
+/*    @DeleteMapping("/{albumId}/artists/{artistId}")
+    public ResponseEntity<Void> unlinkArtist(@PathVariable Long albumId, @PathVariable Long artistId) {
+        albumService.unlinkArtist(albumId, artistId);
+        return ResponseEntity.ok().build();
+    }*/
+
 }

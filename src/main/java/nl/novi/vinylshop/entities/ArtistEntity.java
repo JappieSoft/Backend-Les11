@@ -15,12 +15,7 @@ public class ArtistEntity extends BaseEntity {
     @Column(name ="biography")
     private String biography;
 
-    @ManyToMany
-    @JoinTable(
-            name = "albums_artists",
-            joinColumns = @JoinColumn(name = "artist_id"),
-            inverseJoinColumns = @JoinColumn(name = "album_id")
-    )
+    @ManyToMany(mappedBy = "artists")
     private Set<AlbumEntity> albums = new HashSet<>();
 
     public String getName() {
