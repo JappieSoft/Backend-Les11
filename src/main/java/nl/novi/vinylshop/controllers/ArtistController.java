@@ -64,10 +64,10 @@ public class ArtistController {
         albumService.linkArtist(albumId, artistId);
         return ResponseEntity.ok().build();
     }
-/*    @DeleteMapping("/{albumId}/artists/{artistId}")
+    @DeleteMapping("/{albumId}/artists/{artistId}")
     public ResponseEntity<Void> unlinkArtist(@PathVariable Long albumId, @PathVariable Long artistId) {
         albumService.unlinkArtist(albumId, artistId);
         return ResponseEntity.ok().build();
-    }*/
+    }
 
 }

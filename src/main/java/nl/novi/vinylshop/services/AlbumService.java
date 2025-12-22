@@ -12,6 +12,7 @@ import nl.novi.vinylshop.helpers.ServiceHelper;
 import nl.novi.vinylshop.repository.AlbumRepository;
 import nl.novi.vinylshop.repository.ArtistRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -86,7 +87,6 @@ public class AlbumService {
         existingAlbumEntity.setPublisher(publisherEntity);
 
         albumRepository.save(existingAlbumEntity);
-
         return albumMapper.mapToDto(existingAlbumEntity);
     }
 
@@ -107,5 +107,18 @@ public class AlbumService {
         existingArtistEntity.getAlbums().add(existingAlbumEntity);
 
         albumRepository.save(existingAlbumEntity);
+        artistRepository.save(existingArtistEntity);
     }
+
+    @Transactional
+    public void unlinkArtist(Long albumId, Long artistId){
+        AlbumEntity existingAlbumEntity = getAlbumEntity(albumId);
+        ArtistEntity existingArtistEntity = getArtistEntity(artistId);
+
+        existingAlbumEntity.getArtists().remove(existingArtistEntity);
+
+        albumRepository.save(existingAlbumEntity);
+    }
+
+
 }
