@@ -1,5 +1,6 @@
 package nl.novi.vinylshop.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import nl.novi.vinylshop.dtos.mapper.AlbumExtendedResponseMapper;
 import nl.novi.vinylshop.dtos.mapper.AlbumMapper;
@@ -51,11 +52,7 @@ public class AlbumService {
     }
 
     private AlbumEntity getAlbumEntity(Long id){
-        Optional<AlbumEntity> albumEntity = albumRepository.findById(id);
-        if (albumEntity.isPresent()) {
-            return albumEntity.get();
-        }
-        return null;
+        return albumRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Album niet gevonden: " + id));
     }
 
     private ArtistEntity getArtistEntity(Long id){
@@ -94,13 +91,14 @@ public class AlbumService {
         return albumMapper.mapToDto(existingAlbumEntity);
     }
 
+    @Transactional
     public void deleteAlbum(Long id) {
-        try{
-            AlbumEntity existingAlbumEntity = getAlbumEntity(id);
-            albumRepository.delete(existingAlbumEntity);
-        } catch (IndexOutOfBoundsException ex) {
-        }
+            AlbumEntity album = getAlbumEntity(id);  // Exception 1
+            if (!album.getStockItems().isEmpty()) { throw new IllegalStateException("Cannot delete album that contains stock");
+            }
+            albumRepository.delete(album);
     }
+
 
     @Transactional
     public void linkArtist(Long albumId, Long artistId){

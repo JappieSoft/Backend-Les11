@@ -1,9 +1,12 @@
 package nl.novi.vinylshop.services;
 
+import jakarta.transaction.Transactional;
 import nl.novi.vinylshop.dtos.mapper.ArtistMapper;
 import nl.novi.vinylshop.dtos.request.ArtistRequestDTO;
 import nl.novi.vinylshop.dtos.response.ArtistResponseDTO;
+import nl.novi.vinylshop.entities.AlbumEntity;
 import nl.novi.vinylshop.entities.ArtistEntity;
+import nl.novi.vinylshop.repository.AlbumRepository;
 import nl.novi.vinylshop.repository.ArtistRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +18,12 @@ import java.util.Optional;
 
         private final ArtistMapper artistMapper;
         private final ArtistRepository artistRepository;
+        private final AlbumRepository albumRepository;
 
-        public ArtistService(ArtistMapper artistMapper, ArtistRepository artistRepository) {
+        public ArtistService(ArtistMapper artistMapper, ArtistRepository artistRepository, AlbumRepository albumRepository) {
             this.artistMapper = artistMapper;
             this.artistRepository = artistRepository;
+            this.albumRepository = albumRepository;
         }
 
         public List<ArtistResponseDTO> findAllArtists() {
@@ -59,9 +64,16 @@ import java.util.Optional;
             return artistMapper.mapToDto(existingArtistEntity);
         }
 
+        @Transactional
         public void deleteArtist(Long id) {
             try{
                 ArtistEntity existingArtistEntity = getArtistEntity(id);
+
+                for(AlbumEntity album : existingArtistEntity.getAlbums()){
+                    album.setArtists(null);
+                    albumRepository.save(album);
+                }
+
                 artistRepository.delete(existingArtistEntity);
             } catch (IndexOutOfBoundsException ex) {
             }

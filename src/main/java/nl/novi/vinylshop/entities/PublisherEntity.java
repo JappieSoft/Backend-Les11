@@ -38,4 +38,7 @@ public class PublisherEntity extends BaseEntity{
     public void setContactDetails(String contactDetails) {
         this.contactDetails = contactDetails;
     }
+
+    public Set<AlbumEntity> getAlbums() { return albums; }
+    public void setAlbums(Set<AlbumEntity> albums) { this.albums = albums; }
 }

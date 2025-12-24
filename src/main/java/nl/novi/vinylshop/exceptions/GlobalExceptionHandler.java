@@ -21,6 +21,13 @@ public class GlobalExceptionHandler {
         return ex.getBindingResult().getFieldErrors().stream().map(FieldError::getDefaultMessage).toList();
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public String handleException(IllegalStateException ex){
+        return ex.getMessage();
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
