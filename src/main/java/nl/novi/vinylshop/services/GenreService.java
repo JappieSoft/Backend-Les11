@@ -1,9 +1,13 @@
 package nl.novi.vinylshop.services;
 
+import jakarta.transaction.Transactional;
 import nl.novi.vinylshop.dtos.mapper.GenreMapper;
 import nl.novi.vinylshop.dtos.request.GenreRequestDTO;
 import nl.novi.vinylshop.dtos.response.GenreResponseDTO;
+import nl.novi.vinylshop.entities.AlbumEntity;
 import nl.novi.vinylshop.entities.GenreEntity;
+import nl.novi.vinylshop.entities.PublisherEntity;
+import nl.novi.vinylshop.repository.AlbumRepository;
 import nl.novi.vinylshop.repository.GenreRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -25,10 +29,12 @@ public class GenreService {
 
     private final GenreMapper genreMapper;
     private final GenreRepository genreRepository;
+    private final AlbumRepository albumRepository;
 
-    public GenreService(GenreMapper genreMapper, GenreRepository genreRepository) {
+    public GenreService(GenreMapper genreMapper, GenreRepository genreRepository, AlbumRepository albumRepository) {
         this.genreMapper = genreMapper;
         this.genreRepository = genreRepository;
+        this.albumRepository = albumRepository;
     }
 
     /**
@@ -102,8 +108,15 @@ public class GenreService {
     public void deleteGenre(Long id) {
         try{
         GenreEntity existingGenreEntity = getGenreEntity(id);
+
+            for(AlbumEntity album : albumRepository.findByGenre_Id(id)){
+                album.setGenre(null);
+                albumRepository.save(album);
+            }
+
         genreRepository.delete(existingGenreEntity);
         } catch (IndexOutOfBoundsException ex) {
         }
     }
+
 }

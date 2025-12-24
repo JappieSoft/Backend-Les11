@@ -33,6 +33,9 @@ public class PublisherController {
     @GetMapping("/{id}")
     public ResponseEntity<PublisherResponseDTO> getPublisherById(@PathVariable Long id) {
         PublisherResponseDTO publisher = publisherService.findPublisherById(id);
+        if (publisher == null) {
+            return ResponseEntity.notFound().build(); // check of genre bestaat anders hier dus 404 Not Found
+        }
         return new ResponseEntity<PublisherResponseDTO>(publisher, HttpStatus.OK);
     }
 

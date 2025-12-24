@@ -40,6 +40,9 @@ public class GenreController {
     @GetMapping("/{id}")
     public ResponseEntity<GenreResponseDTO> getGenreById(@PathVariable Long id) {
         GenreResponseDTO genre = genreService.findGenreById(id);
+        if (genre == null) {
+            return ResponseEntity.notFound().build();  // check of genre bestaat anders hier dus 404 Not Found
+        }
         return new ResponseEntity<GenreResponseDTO>(genre, HttpStatus.OK);
     }
 

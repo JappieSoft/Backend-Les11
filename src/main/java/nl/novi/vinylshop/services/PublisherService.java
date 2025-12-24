@@ -1,9 +1,12 @@
 package nl.novi.vinylshop.services;
 
+import jakarta.transaction.Transactional;
 import nl.novi.vinylshop.dtos.mapper.PublisherMapper;
 import nl.novi.vinylshop.dtos.request.PublisherRequestDTO;
 import nl.novi.vinylshop.dtos.response.PublisherResponseDTO;
+import nl.novi.vinylshop.entities.AlbumEntity;
 import nl.novi.vinylshop.entities.PublisherEntity;
+import nl.novi.vinylshop.repository.AlbumRepository;
 import nl.novi.vinylshop.repository.PublisherRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +18,12 @@ public class PublisherService {
 
     private final PublisherMapper publisherMapper;
     private final PublisherRepository publisherRepository;
+    private final AlbumRepository albumRepository;
 
-    public PublisherService(PublisherMapper publisherMapper, PublisherRepository publisherRepository) {
+    public PublisherService(PublisherMapper publisherMapper, PublisherRepository publisherRepository, AlbumRepository albumRepository) {
         this.publisherMapper = publisherMapper;
         this.publisherRepository = publisherRepository;
+        this.albumRepository = albumRepository;
     }
 
     public List<PublisherResponseDTO> findAllPublishers() {
@@ -60,9 +65,16 @@ public class PublisherService {
         return publisherMapper.mapToDto(existingPublisherEntity);
     }
 
+    @Transactional
     public void deletePublisher(Long id) {
         try{
             PublisherEntity existingPublisherEntity = getPublisherEntity(id);
+
+            for(AlbumEntity album : existingPublisherEntity.getAlbums()){
+                album.setPublisher(null);
+                albumRepository.save(album);
+            }
+
             publisherRepository.delete(existingPublisherEntity);
         } catch (IndexOutOfBoundsException ex) {
         }

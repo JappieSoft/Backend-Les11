@@ -1,5 +1,6 @@
 package nl.novi.vinylshop.exceptions;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,5 +19,19 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public List<String> handleException(MethodArgumentNotValidException ex){
         return ex.getBindingResult().getFieldErrors().stream().map(FieldError::getDefaultMessage).toList();
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public String handleException(IllegalStateException ex){
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public String handleException(EntityNotFoundException ex){
+        return ex.getMessage();
     }
 }
