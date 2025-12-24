@@ -24,14 +24,14 @@ public class StockController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StockResponseDTO>> getAllStocks() {
-        List<StockResponseDTO> stockItems = stockService.findAllStocks();
+    public ResponseEntity<List<StockResponseDTO>> getAllStocks(@PathVariable Long albumId) {
+        List<StockResponseDTO> stockItems = stockService.findAllStocks(albumId);
         return ResponseEntity.ok(stockItems);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StockResponseDTO> getStockById(@PathVariable Long id) {
-        StockResponseDTO stockItems = stockService.findStockById(id);
+    public ResponseEntity<StockResponseDTO> getStockById(@PathVariable Long albumId, @PathVariable Long id) {
+        StockResponseDTO stockItems = stockService.findStockById(albumId, id);
         if (stockItems == null) {
             return ResponseEntity.notFound().build(); // check of genre bestaat anders hier dus 404 Not Found
         }
@@ -39,8 +39,8 @@ public class StockController {
     }
 
     @PostMapping
-    public ResponseEntity<StockResponseDTO> createStock(@Valid @RequestBody StockRequestDTO stockInput) {
-        StockResponseDTO newStock = stockService.createStock(stockInput);
+    public ResponseEntity<StockResponseDTO> createStock(@PathVariable Long albumId, @Valid @RequestBody StockRequestDTO stockInput) {
+        StockResponseDTO newStock = stockService.createStock(albumId, stockInput);
         return ResponseEntity.created(urlHelper.getCurrentUrlWithId(newStock.getId())).body(newStock);
     }
 

@@ -21,11 +21,9 @@ public class AlbumMapper implements DtoMapper<AlbumResponseDTO, AlbumRequestDTO,
         this.artistMapper = artistMapper;
     }
 
-    @Override
-    public AlbumResponseDTO mapToDto(AlbumEntity model) {
+    public <D extends AlbumResponseDTO> D mapToDto(AlbumEntity model, D dto) {
         if (model == null) return null;
 
-        AlbumResponseDTO dto = new AlbumResponseDTO();
         dto.setId(model.getId());
         dto.setTitle(model.getTitle());
         dto.setReleaseYear(model.getReleaseYear());
@@ -34,6 +32,11 @@ public class AlbumMapper implements DtoMapper<AlbumResponseDTO, AlbumRequestDTO,
         dto.setArtists(artistMapper.mapToDto(new ArrayList<>(model.getArtists())));
 
         return dto;
+    }
+
+    @Override
+    public AlbumResponseDTO mapToDto(AlbumEntity model) {
+        return mapToDto(model, new AlbumResponseDTO());
     }
 
     @Override

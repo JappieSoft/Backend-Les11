@@ -1,8 +1,10 @@
 package nl.novi.vinylshop.services;
 
 import jakarta.transaction.Transactional;
+import nl.novi.vinylshop.dtos.mapper.AlbumExtendedResponseMapper;
 import nl.novi.vinylshop.dtos.mapper.AlbumMapper;
 import nl.novi.vinylshop.dtos.request.AlbumRequestDTO;
+import nl.novi.vinylshop.dtos.response.AlbumExtendedResponseDTO;
 import nl.novi.vinylshop.dtos.response.AlbumResponseDTO;
 import nl.novi.vinylshop.entities.AlbumEntity;
 import nl.novi.vinylshop.entities.ArtistEntity;
@@ -21,12 +23,14 @@ import java.util.Optional;
 public class AlbumService {
 
     private final AlbumMapper albumMapper;
+    private final AlbumExtendedResponseMapper albumExtendedResponseMapper;
     private final AlbumRepository albumRepository;
     private final ArtistRepository artistRepository;
     private final ServiceHelper serviceHelper;
 
-    public AlbumService(AlbumMapper albumMapper, AlbumRepository albumRepository, ArtistRepository artistRepository ,ServiceHelper serviceHelper) {
+    public AlbumService(AlbumMapper albumMapper,AlbumExtendedResponseMapper albumExtendedResponseMapper ,AlbumRepository albumRepository, ArtistRepository artistRepository ,ServiceHelper serviceHelper) {
         this.albumMapper = albumMapper;
+        this.albumExtendedResponseMapper = albumExtendedResponseMapper;
         this.albumRepository = albumRepository;
         this.artistRepository = artistRepository;
         this.serviceHelper = serviceHelper;
@@ -38,10 +42,10 @@ public class AlbumService {
     }
 
     @Transactional
-    public AlbumResponseDTO findAlbumById(Long id) {
-        Optional<AlbumEntity> AlbumEntity = albumRepository.findById(id);
-        if (AlbumEntity.isPresent()) {
-            return albumMapper.mapToDto(AlbumEntity.get());
+    public AlbumExtendedResponseDTO findAlbumById(Long id) {
+        Optional<AlbumEntity> albumEntity = albumRepository.findById(id);
+        if (albumEntity.isPresent()) {
+            return albumExtendedResponseMapper.mapToDto(albumEntity.get());
         }
         return null;
     }
@@ -119,6 +123,4 @@ public class AlbumService {
 
         albumRepository.save(existingAlbumEntity);
     }
-
-
 }

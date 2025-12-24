@@ -1,9 +1,12 @@
 package nl.novi.vinylshop.services;
 
+import jakarta.transaction.Transactional;
 import nl.novi.vinylshop.dtos.mapper.StockMapper;
 import nl.novi.vinylshop.dtos.request.StockRequestDTO;
 import nl.novi.vinylshop.dtos.response.StockResponseDTO;
+import nl.novi.vinylshop.entities.AlbumEntity;
 import nl.novi.vinylshop.entities.StockEntity;
+import nl.novi.vinylshop.repository.AlbumRepository;
 import nl.novi.vinylshop.repository.StockRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,29 +18,38 @@ public class StockService {
 
     private final StockMapper stockMapper;
     private final StockRepository stockRepository;
+    private final AlbumRepository albumRepository;
 
-    public StockService(StockMapper stockMapper, StockRepository stockRepository) {
+    public StockService(StockMapper stockMapper, StockRepository stockRepository, AlbumRepository albumRepository) {
         this.stockMapper = stockMapper;
         this.stockRepository = stockRepository;
+        this.albumRepository = albumRepository;
     }
 
-    public List<StockResponseDTO> findAllStocks() {
-        return stockMapper.mapToDto(stockRepository.findAll());
+    public List<StockResponseDTO> findAllStocks(Long albumId) {
+        return stockMapper.mapToDto(stockRepository.findByAlbumId(albumId));
     }
 
-    public StockResponseDTO findStockById(Long id) {
-        Optional<StockEntity> StockEntity = stockRepository.findById(id);
+    public StockResponseDTO findStockById(Long albumId, Long id) {
+        Optional<StockEntity> StockEntity = stockRepository.findByIdAndAlbumId(id, albumId);
         if (StockEntity.isPresent()) {
             return stockMapper.mapToDto(StockEntity.get());
         }
         return null;
     }
 
-    public StockResponseDTO createStock(StockRequestDTO stockRequestDTO) {
-        StockEntity stockEntity = stockMapper.mapToEntity(stockRequestDTO);
-        stockEntity = stockRepository.save(stockEntity);
+    @Transactional
+    public StockResponseDTO createStock(Long albumId, StockRequestDTO stockRequestDTO) {
+        Optional<AlbumEntity> albumEntity = albumRepository.findById(albumId);
+        if (albumEntity.isPresent()) {
 
+        StockEntity stockEntity = stockMapper.mapToEntity(stockRequestDTO);
+        stockEntity.setAlbum(albumEntity.get());
+
+        stockEntity = stockRepository.save(stockEntity);
         return stockMapper.mapToDto(stockEntity);
+        }
+        return null;
     }
 
     private StockEntity getStockEntity(Long id){

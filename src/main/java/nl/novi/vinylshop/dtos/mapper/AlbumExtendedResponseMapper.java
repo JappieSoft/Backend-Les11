@@ -6,6 +6,7 @@ import nl.novi.vinylshop.entities.AlbumEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 @Component
@@ -18,8 +19,8 @@ public class AlbumExtendedResponseMapper extends AlbumMapper {
     }
 
     @Override
-    public AlbumResponseDTO mapToDto(AlbumEntity model) {
-        AlbumExtendedResponseDTO dto = (AlbumExtendedResponseDTO) super.mapToDto(model);
+    public AlbumExtendedResponseDTO mapToDto(AlbumEntity model) {
+        AlbumExtendedResponseDTO dto = mapToDto(model, new AlbumExtendedResponseDTO());
         if (dto == null) return null;
 
         dto.setStock(stockMapper.mapToDto(new ArrayList<>(model.getStockItems())));

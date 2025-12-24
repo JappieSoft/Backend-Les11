@@ -2,6 +2,7 @@ package nl.novi.vinylshop.controllers;
 
 import jakarta.validation.Valid;
 import nl.novi.vinylshop.dtos.request.AlbumRequestDTO;
+import nl.novi.vinylshop.dtos.response.AlbumExtendedResponseDTO;
 import nl.novi.vinylshop.dtos.response.AlbumResponseDTO;
 import nl.novi.vinylshop.helpers.UrlHelper;
 import nl.novi.vinylshop.services.AlbumService;
@@ -30,12 +31,12 @@ public class AlbumController {
     }
 
     @GetMapping("/{albumId}")
-    public ResponseEntity<AlbumResponseDTO> getAlbumById(@PathVariable Long albumId) {
-        AlbumResponseDTO album = albumService.findAlbumById(albumId);
+    public ResponseEntity<AlbumExtendedResponseDTO> getAlbumById(@PathVariable Long albumId) {
+        AlbumExtendedResponseDTO album = albumService.findAlbumById(albumId);
         if (album == null) {
             return ResponseEntity.notFound().build(); // check of genre bestaat anders hier dus 404 Not Found
         }
-        return new ResponseEntity<AlbumResponseDTO>(album, HttpStatus.OK);
+        return new ResponseEntity<>(album, HttpStatus.OK);
     }
 
     @PostMapping
